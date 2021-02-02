@@ -26,7 +26,7 @@
       Sort by Status
     </button>
 
-    <div class="card">
+    <div class="card bg-warning">
       <div class="card-body bg-warning rounded text-center">
         <div class="row border redbr  border-dark rounded">
           <div class="col-3">
