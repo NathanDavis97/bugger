@@ -8,11 +8,12 @@ const Bug = new Schema(
     title: {
       type: String, required: true
     },
-    closedDate: {
+    // name: { type: String },
+    modifiedDate: {
       type: Date
     },
-    creatorId: { type: String },
-    creatorEmail: { type: String, required: true }
+    creatorId: { type: String, required: true },
+    creatorEmail: { type: String }
   }, { timestamps: true, toJSON: { virtuals: true } }
 )
 Bug.virtual('creator', {

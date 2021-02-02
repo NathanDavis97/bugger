@@ -19,12 +19,8 @@ class BugsService {
     return await dbContext.Bugs.create(data)
   }
 
-  async delete(req) {
-    const bug = await dbContext.Bugs.findOneAndDelete({ _id: req.params.id, creatorId: req.userInfo.id })
-    if (!bug) {
-      throw new BadRequest('You are not the owner, or this is not a valid bug')
-    }
-    return 'delorted'
+  async update(update, req) {
+    return await dbContext.Bugs.findOneAndUpdate({ _id: update.id, creatorId: req.userInfo.id }, update, { new: true }).populate('creator')
   }
 }
 export const bugsService = new BugsService()

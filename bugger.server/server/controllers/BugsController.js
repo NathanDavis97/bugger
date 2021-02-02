@@ -2,17 +2,18 @@ import { Auth0Provider } from '@bcwdev/auth0provider'
 import BaseController from '../utils/BaseController'
 import { bugsService } from '../services/BugsService.js'
 import { notesService } from '../services/NotesService.js'
+import { logger } from '../utils/Logger'
 
 export class BugsController extends BaseController {
   constructor() {
     super('api/bugs')
     this.router
-      .use(Auth0Provider.getAuthorizedUserInfo)
       .get('', this.getAll)
       .get('/:id', this.getById)
       .get('/:id/notes', this.getAllNotes)
+      .use(Auth0Provider.getAuthorizedUserInfo)
+      .put('/:id', this.update)
       .post('', this.create)
-      .delete('/:id', this.delete)
   }
 
   async getAll(req, res, next) {
@@ -38,6 +39,7 @@ export class BugsController extends BaseController {
 
   async getAllNotes(req, res, next) {
     try {
+      logger.log(req)
       req.query.user = req.params.user
       const data = await notesService.find({ bugId: req.params.id })
       res.send(data)
@@ -48,7 +50,7 @@ export class BugsController extends BaseController {
 
   async create(req, res, next) {
     try {
-      req.body.user = req.params.user
+      // req.body.user = req.userInfo
       const data = await bugsService.create(req.body)
       res.send(data)
     } catch (error) {
@@ -56,10 +58,12 @@ export class BugsController extends BaseController {
     }
   }
 
-  async delete(req, res, next) {
+  async update(req, res, next) {
     try {
-      await bugsService.delete(req)
-      res.send('deleted')
+      req.body.id = req.params.id
+      req.body.creatorId = req.userInfo.id
+      const data = await bugsService.update(req.body, req)
+      res.send(data)
     } catch (error) {
       next(error)
     }

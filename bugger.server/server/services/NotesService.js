@@ -3,8 +3,8 @@ import { BadRequest } from '../utils/Errors'
 
 class NotesService {
   async find(query = {}) {
-    const notess = await dbContext.Notes.find(query).populate('creator')
-    return notess
+    const notes = await dbContext.Notes.find(query).populate('creator')
+    return notes
   }
 
   async findById(id) {
